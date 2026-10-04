@@ -6,46 +6,53 @@
     <title>📋 中山分隊受理災害登記簿登打輔助系統</title>
     <style>
         :root {
-            --primary: #2563eb;
-            --primary-hover: #1d4ed8;
-            --danger: #dc2626;
-            --bg-color: #f8fafc;
+            --primary: #3b82f6;
+            --primary-light: #eff6ff;
+            --danger: #ef4444;
+            --danger-light: #fef2f2;
+            --warning: #f97316;
+            --bg-color: #f1f5f9;
             --card-bg: #ffffff;
-            --text-main: #1e293b;
+            --text-main: #0f172a;
             --text-muted: #64748b;
             --border-color: #e2e8f0;
+            --radius-lg: 16px;
+            --radius-md: 10px;
+            --radius-pill: 999px;
         }
 
         body {
-            font-family: system-ui, -apple-system, "Microsoft JhengHei", Arial, sans-serif;
+            font-family: "SF Pro TC", "SF Pro Text", "Microsoft JhengHei", system-ui, -apple-system, sans-serif;
             background-color: var(--bg-color);
             color: var(--text-main);
             margin: 0;
-            padding: 20px;
+            padding: 30px 0; /* 取消固定的左右 padding，改由 container 控管 */
             box-sizing: border-box;
+            line-height: 1.5;
         }
 
         .container {
-            width: 100%;
-            max-width: 1400px;
+            width: 96%; /* 依據螢幕比例滿版延伸 */
+            max-width: 1920px; /* 支援到 1080p / 2K 螢幕極限寬度 */
             margin: 0 auto;
         }
 
         h2 {
             text-align: center;
-            color: #0f172a;
+            color: var(--text-main);
             margin-top: 0;
-            margin-bottom: 24px;
-            font-size: 24px;
-            font-weight: 700;
+            margin-bottom: 30px;
+            font-size: 26px;
+            font-weight: 800;
             letter-spacing: 0.5px;
         }
 
         /* 左右雙欄響應式排版 */
         .main-layout {
             display: grid;
-            grid-template-columns: 1fr 450px;
-            gap: 24px;
+            /* 左側自適應極大化延伸，右側加寬到 500px 以平衡大螢幕 */
+            grid-template-columns: 1fr 500px;
+            gap: 32px;
             align-items: start;
         }
 
@@ -61,102 +68,113 @@
         .column {
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 24px;
             min-width: 0;
         }
 
         .sticky-column {
             position: sticky;
-            top: 20px;
+            top: 30px;
         }
 
         /* 基礎區塊共用樣式 */
         .section-group {
             background: var(--card-bg);
-            padding: 20px;
-            border: 1px solid var(--border-color);
-            border-radius: 14px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px -2px rgba(0, 0, 0, 0.02);
-            transition: all 0.2s ease;
+            padding: 24px;
+            border-radius: var(--radius-lg);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.025);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            position: relative;
+            overflow: hidden;
         }
 
         .section-group:hover {
-            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.04);
+            box-shadow: 0 12px 20px -3px rgba(0,0,0,0.08);
+        }
+
+        .section-group::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 6px;
         }
 
         .section-group h3 {
             margin-top: 0;
-            margin-bottom: 16px;
-            font-size: 16px;
-            font-weight: 600;
-            padding-bottom: 8px;
-            border-bottom: 2px solid rgba(0,0,0,0.06);
+            margin-bottom: 20px;
+            font-size: 17px;
+            font-weight: 700;
             display: flex;
             align-items: center;
             gap: 8px;
+            color: var(--text-main);
         }
 
-        /* 🎨 區塊一：基本案件資訊 (柔和溫暖橘色系) */
-        .section-info {
-            background: linear-gradient(to bottom, #ffffff, #fff7ed);
-            border-top: 4px solid #f97316;
-        }
-        .section-info h3 {
-            color: #c2410c;
+        /* 左側色彩識別標籤 */
+        .section-info::before { background-color: var(--warning); }
+        .section-car::before { background-color: var(--danger); }
+        .section-person::before { background-color: var(--primary); }
+        .section-output::before { background-color: #8b5cf6; } 
+
+        /* 表單與輸入框 */
+        .flex-row { display: flex; gap: 16px; }
+        .flex-col { flex: 1; }
+        @media (max-width: 600px) { .flex-row { flex-direction: column; } }
+
+        label.field-label {
+            display: block;
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+            font-weight: 600;
         }
 
-        /* 🎨 區塊二：出勤車輛 (柔和暖紅系色塊) */
-        .section-car {
-            background: linear-gradient(to bottom, #ffffff, #fff5f5);
-            border-top: 4px solid #ef4444;
-        }
-        .section-car h3 {
-            color: #b91c1c;
-        }
-
-        /* 🎨 區塊三：出勤人員 (柔和藍色系色塊 - 配合反藍按鈕) */
-        .section-person {
-            background: linear-gradient(to bottom, #ffffff, #eff6ff);
-            border-top: 4px solid #2563eb;
-        }
-        .section-person h3 {
-            color: #1d4ed8;
+        input[type="text"] {
+            width: 100%;
+            padding: 12px 16px;
+            box-sizing: border-box;
+            border: 1.5px solid var(--border-color);
+            border-radius: var(--radius-md);
+            font-size: 15px;
+            background: #f8fafc;
+            color: var(--text-main);
+            transition: all 0.2s ease;
         }
 
-        /* 🎨 區塊四：產出文字結果 (深色質感專業系色塊) */
-        .section-output {
-            background: #0f172a;
-            color: #f8fafc;
-            border: none;
-            border-top: 4px solid #6366f1;
-            box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.3);
-        }
-        .section-output h3 {
-            color: #38bdf8;
-            border-bottom-color: rgba(255,255,255,0.1);
+        input[type="text"]:focus {
+            outline: none;
+            background: #ffffff;
+            border-color: var(--warning);
+            box-shadow: 0 0 0 4px rgba(249, 115, 22, 0.1);
         }
 
+        input[type="text"]::placeholder {
+            color: #94a3b8;
+        }
+
+        /* 膠囊按鈕群組 (車輛/人員) */
         .grid-options {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(85px, 1fr));
-            gap: 8px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
         }
 
         .checkbox-card {
-            display: flex;
+            display: inline-flex;
             align-items: center;
             justify-content: center;
-            background: #ffffff;
-            border: 1px solid var(--border-color);
-            padding: 9px 6px;
-            border-radius: 8px;
+            background: #f1f5f9;
+            border: 1.5px solid transparent;
+            padding: 8px 16px;
+            border-radius: var(--radius-pill);
             cursor: pointer;
-            transition: all 0.15s ease;
-            font-size: 13px;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            font-size: 14px;
+            font-weight: 500;
             user-select: none;
-            text-align: center;
-            color: var(--text-main);
-            box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+            color: var(--text-muted);
         }
 
         .checkbox-card input {
@@ -164,161 +182,124 @@
         }
 
         .checkbox-card:hover {
-            border-color: var(--primary);
-            background: #f1f5f9;
+            background: #e2e8f0;
+            color: var(--text-main);
         }
 
-        /* 車輛專用：點選後反紅 */
+        /* 車輛：選取狀態 */
         .car-card.checked {
-            background: var(--danger);
-            border-color: var(--danger);
-            color: #ffffff;
-            font-weight: 600;
-            box-shadow: 0 2px 4px rgba(220, 38, 38, 0.3);
-        }
-        .car-card:hover {
-            border-color: var(--danger) !important;
+            background: var(--danger-light);
+            border-color: #fca5a5;
+            color: var(--danger);
+            font-weight: 700;
         }
 
-        /* 人員專用：點選後反藍 */
+        /* 人員：選取狀態 */
         .person-card.checked {
-            background: var(--primary);
-            border-color: var(--primary);
-            color: #ffffff;
-            font-weight: 600;
-            box-shadow: 0 2px 4px rgba(37, 99, 235, 0.3);
+            background: var(--primary-light);
+            border-color: #bfdbfe;
+            color: var(--primary);
+            font-weight: 700;
         }
 
-        .flex-row {
-            display: flex;
-            gap: 12px;
-        }
-
-        @media (max-width: 600px) {
-            .flex-row {
-                flex-direction: column;
-            }
-        }
-
-        .flex-col {
-            flex: 1;
-        }
-
-        label.field-label {
-            display: block;
-            font-size: 12px;
-            color: var(--text-muted);
-            margin-bottom: 6px;
-            font-weight: 600;
-        }
-
-        input[type="text"] {
-            width: 100%;
-            padding: 10px 14px;
-            box-sizing: border-box;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            font-size: 14px;
-            background: #fff;
-            transition: all 0.15s;
-        }
-
-        input[type="text"]:focus {
-            outline: none;
-            border-color: #f97316;
-            box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.12);
-        }
-
+        /* 職稱標籤 */
         .category-badge {
             font-size: 12px;
-            font-weight: 600;
-            color: #1e40af;
-            background: #dbeafe;
-            padding: 3px 10px;
-            border-radius: 6px;
-            display: inline-block;
-            margin-top: 12px;
-            margin-bottom: 8px;
+            font-weight: 700;
+            color: var(--text-muted);
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            display: block;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            padding-bottom: 6px;
+            border-bottom: 1px solid var(--border-color);
         }
+        
+        .category-group:first-child .category-badge { margin-top: 0; }
 
-        .category-badge:first-of-type {
-            margin-top: 0;
-        }
-
+        /* 產出結果區塊 (改為明亮色系) */
         .output-box {
-            background: #020617;
-            color: #38bdf8;
-            border: 1px solid #1e293b;
-            padding: 18px;
-            border-radius: 10px;
+            background: #f8fafc;
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+            padding: 20px;
+            border-radius: var(--radius-md);
             white-space: pre-wrap;
             word-break: break-all;
             font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-            font-size: 14px;
-            line-height: 1.7;
-            min-height: 280px;
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.4);
+            font-size: 16px; /* 稍微放大文字以適應大螢幕 */
+            line-height: 1.8;
+            min-height: 250px;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
+            transition: all 0.3s ease;
         }
 
         .btn {
             width: 100%;
-            background: linear-gradient(135deg, #6366f1, #4f46e5);
+            background: #8b5cf6;
             color: white;
             border: none;
-            padding: 12px 20px;
-            font-size: 15px;
-            font-weight: 600;
-            border-radius: 8px;
+            padding: 14px 20px;
+            font-size: 16px;
+            font-weight: 700;
+            border-radius: var(--radius-md);
             cursor: pointer;
             transition: all 0.2s;
             display: inline-flex;
             justify-content: center;
             align-items: center;
             gap: 8px;
-            margin-top: 16px;
-            box-shadow: 0 4px 6px -1px rgba(99, 102, 241, 0.3);
+            margin-top: 20px;
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
         }
 
         .btn:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 6px 10px -1px rgba(99, 102, 241, 0.4);
+            background: #7c3aed;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(139, 92, 246, 0.4);
         }
 
         .btn:active {
             transform: translateY(0);
+        }
+        
+        .btn.success {
+            background: #10b981;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>📋 中山分隊受理災害登記簿登打輔助系統</h2>
+    <h2>📋 中山分隊受理災害登記簿登打系統</h2>
 
     <div class="main-layout">
-        <!-- 左側欄位：1, 2, 3 區塊 -->
+        <!-- 左側欄位 -->
         <div class="column">
             <!-- 區塊一：基本案件資訊 -->
             <div class="section-group section-info">
                 <h3>📍 1. 基本案件資訊</h3>
-                <div class="flex-row" style="margin-bottom: 12px;">
+                <div class="flex-row" style="margin-bottom: 16px;">
                     <div class="flex-col">
                         <label class="field-label">案件地址</label>
-                        <input type="text" id="address" value="" placeholder="請輸入案件地址" oninput="updateOutput()">
+                        <input type="text" id="address" value="" placeholder="請輸入案件地址..." oninput="updateOutput()">
                     </div>
                     <div class="flex-col">
                         <label class="field-label">案件類別</label>
-                        <input type="text" id="dutyType" value="" placeholder="請輸入案件類別" oninput="updateOutput()">
+                        <input type="text" id="dutyType" value="" placeholder="例如：火警、救護..." oninput="updateOutput()">
                     </div>
                 </div>
                 <div>
                     <label class="field-label">處理情形</label>
-                    <input type="text" id="statusNote" value="" placeholder="請輸入處理情形" oninput="updateOutput()">
+                    <input type="text" id="statusNote" value="" placeholder="請簡述處理情形..." oninput="updateOutput()">
                 </div>
             </div>
 
             <!-- 區塊二：出勤車輛 -->
             <div class="section-group section-car">
-                <h3>🚒 2. 出勤車輛 (可複選)</h3>
+                <h3>🚒 2. 出勤車輛 <span style="font-size: 13px; color: var(--text-muted); font-weight: normal;">(可複選)</span></h3>
                 <div id="carList" class="grid-options">
                     <label class="checkbox-card car-card" onclick="toggleCard(this)"><input type="checkbox" value="11車"> 11車</label>
                     <label class="checkbox-card car-card" onclick="toggleCard(this)"><input type="checkbox" value="12車"> 12車</label>
@@ -336,16 +317,16 @@
 
             <!-- 區塊三：出勤人員 -->
             <div class="section-group section-person">
-                <h3>👨‍🚒 3. 出勤人員 (可複選)</h3>
+                <h3>👨‍🚒 3. 出勤人員 <span style="font-size: 13px; color: var(--text-muted); font-weight: normal;">(可複選)</span></h3>
                 
-                <div>
+                <div class="category-group">
                     <span class="category-badge">分隊長</span>
                     <div class="grid-options">
                         <label class="checkbox-card person-card" onclick="toggleCard(this)"><input type="checkbox" class="person-chk" data-title="分隊長" value="歐顯孝"> 歐顯孝</label>
                     </div>
                 </div>
 
-                <div>
+                <div class="category-group">
                     <span class="category-badge">小隊長</span>
                     <div class="grid-options">
                         <label class="checkbox-card person-card" onclick="toggleCard(this)"><input type="checkbox" class="person-chk" data-title="小隊長" value="曾世璿"> 曾世璿</label>
@@ -356,7 +337,7 @@
                     </div>
                 </div>
 
-                <div>
+                <div class="category-group">
                     <span class="category-badge">隊員</span>
                     <div class="grid-options">
                         <label class="checkbox-card person-card" onclick="toggleCard(this)"><input type="checkbox" class="person-chk" data-title="隊員" value="謝咏勲"> 謝咏勲</label>
@@ -397,10 +378,10 @@
         <!-- 區塊四：產出文字結果 -->
         <div class="column sticky-column">
             <div class="section-group section-output">
-                <h3>📋 4. 產出文字結果</h3>
+                <h3>📝 4. 產出文字結果</h3>
                 <div id="outputBox" class="output-box"></div>
-                <button class="btn" onclick="copyText()">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                <button class="btn" id="copyBtn" onclick="copyText()">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
                     一鍵複製文字
                 </button>
             </div>
@@ -409,7 +390,7 @@
 </div>
 
 <script>
-// 點擊整張卡片切換選取狀態與顏色樣式
+// 點擊整張卡片切換選取狀態
 function toggleCard(card) {
     const checkbox = card.querySelector('input[type="checkbox"]');
     checkbox.checked = !checkbox.checked;
@@ -423,15 +404,16 @@ function toggleCard(card) {
     updateOutput();
 }
 
+// 防呆處理與文字產出
 function updateOutput() {
-    const address = document.getElementById('address').value;
-    const dutyType = document.getElementById('dutyType').value;
-    const statusNote = document.getElementById('statusNote').value;
+    const address = document.getElementById('address').value.trim() || '___';
+    const dutyType = document.getElementById('dutyType').value.trim() || '___';
+    const statusNote = document.getElementById('statusNote').value.trim() || '___';
 
     // 收集車輛
     const carCheckboxes = document.querySelectorAll('#carList input[type="checkbox"]:checked');
     let carsArr = Array.from(carCheckboxes).map(chk => chk.value.replace('車',''));
-    let carsStr = carsArr.length > 0 ? carsArr.join('、') + '車' : '';
+    let carsStr = carsArr.length > 0 ? carsArr.join('、') + '車' : '無';
 
     // 收集人員並依照職稱群組化
     const personCheckboxes = document.querySelectorAll('.person-chk:checked');
@@ -453,27 +435,36 @@ function updateOutput() {
         }
     });
 
-    let personsStr = groupStrs.length > 0 ? groupStrs.join('，') + '。' : '。';
+    let personsStr = groupStrs.length > 0 ? groupStrs.join('，') + '。' : '無。';
 
     let resultText = `中山分隊處理情形：\n一、至${address}執行${dutyType}。\n二、${statusNote}。\n三、出勤車輛:${carsStr}。\n四、出勤人員:${personsStr}`;
 
-    document.getElementById('outputBox').innerText = resultText;
+    const outputBox = document.getElementById('outputBox');
+    outputBox.innerText = resultText;
+    
+    // 給予輕微的文字閃爍動畫提示更新
+    outputBox.style.opacity = '0.5';
+    setTimeout(() => { outputBox.style.opacity = '1'; }, 100);
 }
 
+// 複製與按鈕動畫反饋
 function copyText() {
     const outputBox = document.getElementById('outputBox');
     navigator.clipboard.writeText(outputBox.innerText).then(() => {
-        const btn = document.querySelector('.btn');
-        const originalText = btn.innerHTML;
-        btn.innerHTML = '✨ 複製成功！';
-        btn.style.background = 'linear-gradient(135deg, #10b981, #059669)';
+        const btn = document.getElementById('copyBtn');
+        const originalContent = btn.innerHTML;
+        
+        btn.classList.add('success');
+        btn.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg> 複製成功！`;
+        
         setTimeout(() => {
-            btn.innerHTML = originalText;
-            btn.style.background = '';
-        }, 1500);
+            btn.classList.remove('success');
+            btn.innerHTML = originalContent;
+        }, 2000);
     });
 }
 
+// 初始載入時更新一次
 window.onload = updateOutput;
 </script>
 
