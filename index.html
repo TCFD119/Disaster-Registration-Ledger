@@ -26,14 +26,14 @@
             background-color: var(--bg-color);
             color: var(--text-main);
             margin: 0;
-            padding: 30px 0; /* 取消固定的左右 padding，改由 container 控管 */
+            padding: 30px 0; 
             box-sizing: border-box;
             line-height: 1.5;
         }
 
         .container {
-            width: 96%; /* 依據螢幕比例滿版延伸 */
-            max-width: 1920px; /* 支援到 1080p / 2K 螢幕極限寬度 */
+            width: 96%; 
+            max-width: 1920px; 
             margin: 0 auto;
         }
 
@@ -50,7 +50,6 @@
         /* 左右雙欄響應式排版 */
         .main-layout {
             display: grid;
-            /* 左側自適應極大化延伸，右側加寬到 500px 以平衡大螢幕 */
             grid-template-columns: 1fr 500px;
             gap: 32px;
             align-items: start;
@@ -119,7 +118,7 @@
         .section-output::before { background-color: #8b5cf6; } 
 
         /* 表單與輸入框 */
-        .flex-row { display: flex; gap: 16px; }
+        .flex-row { display: flex; gap: 16px; align-items: flex-start; }
         .flex-col { flex: 1; }
         @media (max-width: 600px) { .flex-row { flex-direction: column; } }
 
@@ -152,6 +151,37 @@
 
         input[type="text"]::placeholder {
             color: #94a3b8;
+        }
+
+        /* 快速預設按鈕 (Quick-fill) */
+        .preset-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 8px;
+        }
+
+        .preset-btn {
+            font-size: 12px;
+            padding: 4px 10px;
+            background: #f1f5f9;
+            color: var(--text-muted);
+            border-radius: var(--radius-pill);
+            cursor: pointer;
+            transition: all 0.15s ease;
+            user-select: none;
+            border: 1px solid transparent;
+            font-weight: 500;
+        }
+
+        .preset-btn:hover {
+            background: #e2e8f0;
+            color: var(--text-main);
+            border-color: #cbd5e1;
+        }
+
+        .preset-btn:active {
+            transform: scale(0.95);
         }
 
         /* 膠囊按鈕群組 (車輛/人員) */
@@ -218,7 +248,7 @@
         
         .category-group:first-child .category-badge { margin-top: 0; }
 
-        /* 產出結果區塊 (改為明亮色系) */
+        /* 產出結果區塊 */
         .output-box {
             background: #f8fafc;
             color: var(--text-main);
@@ -228,7 +258,7 @@
             white-space: pre-wrap;
             word-break: break-all;
             font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-            font-size: 16px; /* 稍微放大文字以適應大螢幕 */
+            font-size: 16px; 
             line-height: 1.8;
             min-height: 250px;
             box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
@@ -281,7 +311,7 @@
             <!-- 區塊一：基本案件資訊 -->
             <div class="section-group section-info">
                 <h3>📍 1. 基本案件資訊</h3>
-                <div class="flex-row" style="margin-bottom: 16px;">
+                <div class="flex-row" style="margin-bottom: 20px;">
                     <div class="flex-col">
                         <label class="field-label">案件地址</label>
                         <input type="text" id="address" value="" placeholder="請輸入案件地址..." oninput="updateOutput()">
@@ -289,11 +319,30 @@
                     <div class="flex-col">
                         <label class="field-label">案件類別</label>
                         <input type="text" id="dutyType" value="" placeholder="例如：火警、救護..." oninput="updateOutput()">
+                        <!-- 案件類別快速按鈕 -->
+                        <div class="preset-group">
+                            <span class="preset-btn" onclick="quickFill('dutyType', '住宅火警')">住宅火警</span>
+                            <span class="preset-btn" onclick="quickFill('dutyType', '工廠火警')">工廠火警</span>
+                            <span class="preset-btn" onclick="quickFill('dutyType', '雜草火警')">雜草火警</span>
+                            <span class="preset-btn" onclick="quickFill('dutyType', '電線桿火警')">電線桿火警</span>
+                            <span class="preset-btn" onclick="quickFill('dutyType', '災害搶救')">災害搶救</span>
+                            <span class="preset-btn" onclick="quickFill('dutyType', '瓦斯外洩')">瓦斯外洩</span>
+                            <span class="preset-btn" onclick="quickFill('dutyType', '電梯受困')">電梯受困</span>
+                        </div>
                     </div>
                 </div>
                 <div>
                     <label class="field-label">處理情形</label>
                     <input type="text" id="statusNote" value="" placeholder="請簡述處理情形..." oninput="updateOutput()">
+                    <!-- 處理情形快速按鈕 -->
+                    <div class="preset-group">
+                        <span class="preset-btn" onclick="quickFill('statusNote', '中途取消')">中途取消</span>
+                        <span class="preset-btn" onclick="quickFill('statusNote', '警報器誤動作')">警報器誤動作</span>
+                        <span class="preset-btn" onclick="quickFill('statusNote', '現場為誤報')">現場為誤報</span>
+                        <span class="preset-btn" onclick="quickFill('statusNote', '民眾已自行撲滅')">民眾已自行撲滅</span>
+                        <span class="preset-btn" onclick="quickFill('statusNote', 'RIT小組現場待命')">RIT小組現場待命</span>
+                        <span class="preset-btn" onclick="quickFill('statusNote', '協助脫困後確認無須送醫')">協助脫困後確認無須送醫</span>
+                    </div>
                 </div>
             </div>
 
@@ -390,6 +439,21 @@
 </div>
 
 <script>
+// 點擊快速預設按鈕，將文字填入指定輸入框並更新結果
+function quickFill(elementId, text) {
+    const inputEl = document.getElementById(elementId);
+    inputEl.value = text;
+    
+    // 加上簡單的閃爍特效提示已填入
+    inputEl.style.transition = 'background 0.2s';
+    inputEl.style.background = '#ffedd5';
+    setTimeout(() => {
+        inputEl.style.background = '#ffffff';
+    }, 300);
+
+    updateOutput();
+}
+
 // 點擊整張卡片切換選取狀態
 function toggleCard(card) {
     const checkbox = card.querySelector('input[type="checkbox"]');
