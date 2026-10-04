@@ -3,12 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>📄 中山分隊受理災害登記簿登打輔助系統</title>
+    <title>📋 中山分隊受理災害登記簿登打輔助系統</title>
     <style>
         :root {
             --primary: #2563eb;
             --primary-hover: #1d4ed8;
-            --bg-color: #f1f5f9;
+            --danger: #dc2626;
+            --bg-color: #f8fafc;
             --card-bg: #ffffff;
             --text-main: #1e293b;
             --text-muted: #64748b;
@@ -20,7 +21,7 @@
             background-color: var(--bg-color);
             color: var(--text-main);
             margin: 0;
-            padding: 16px;
+            padding: 20px;
             box-sizing: border-box;
         }
 
@@ -34,20 +35,20 @@
             text-align: center;
             color: #0f172a;
             margin-top: 0;
-            margin-bottom: 20px;
-            font-size: 22px;
+            margin-bottom: 24px;
+            font-size: 24px;
+            font-weight: 700;
             letter-spacing: 0.5px;
         }
 
-        /* 左右雙欄響應式排版：讓左側稍窄、右側結果區更寬敞 */
+        /* 左右雙欄響應式排版 */
         .main-layout {
             display: grid;
-            grid-template-columns: 1fr 440px;
-            gap: 20px;
+            grid-template-columns: 1fr 450px;
+            gap: 24px;
             align-items: start;
         }
 
-        /* 當螢幕小於 1024px 時自動變為單欄 */
         @media (max-width: 1024px) {
             .main-layout {
                 grid-template-columns: 1fr;
@@ -64,17 +65,17 @@
             min-width: 0;
         }
 
-        /* 右側欄位固定懸浮 */
         .sticky-column {
             position: sticky;
-            top: 16px;
+            top: 20px;
         }
 
+        /* 基礎區塊共用樣式 */
         .section-group {
             background: var(--card-bg);
-            padding: 18px;
+            padding: 20px;
             border: 1px solid var(--border-color);
-            border-radius: 12px;
+            border-radius: 14px;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px -2px rgba(0, 0, 0, 0.02);
             transition: all 0.2s ease;
         }
@@ -85,38 +86,77 @@
 
         .section-group h3 {
             margin-top: 0;
-            margin-bottom: 14px;
-            font-size: 15px;
-            color: #334155;
-            border-bottom: 2px solid #e2e8f0;
+            margin-bottom: 16px;
+            font-size: 16px;
+            font-weight: 600;
             padding-bottom: 8px;
+            border-bottom: 2px solid rgba(0,0,0,0.06);
             display: flex;
             align-items: center;
             gap: 8px;
         }
 
-        /* 網格排列：車輛與人員選擇區 */
+        /* 🎨 區塊一：基本案件資訊 (柔和溫暖橘色系) */
+        .section-info {
+            background: linear-gradient(to bottom, #ffffff, #fff7ed);
+            border-top: 4px solid #f97316;
+        }
+        .section-info h3 {
+            color: #c2410c;
+        }
+
+        /* 🎨 區塊二：出勤車輛 (柔和暖紅系色塊) */
+        .section-car {
+            background: linear-gradient(to bottom, #ffffff, #fff5f5);
+            border-top: 4px solid #ef4444;
+        }
+        .section-car h3 {
+            color: #b91c1c;
+        }
+
+        /* 🎨 區塊三：出勤人員 (柔和藍色系色塊 - 配合反藍按鈕) */
+        .section-person {
+            background: linear-gradient(to bottom, #ffffff, #eff6ff);
+            border-top: 4px solid #2563eb;
+        }
+        .section-person h3 {
+            color: #1d4ed8;
+        }
+
+        /* 🎨 區塊四：產出文字結果 (深色質感專業系色塊) */
+        .section-output {
+            background: #0f172a;
+            color: #f8fafc;
+            border: none;
+            border-top: 4px solid #6366f1;
+            box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.3);
+        }
+        .section-output h3 {
+            color: #38bdf8;
+            border-bottom-color: rgba(255,255,255,0.1);
+        }
+
         .grid-options {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(85px, 1fr));
             gap: 8px;
         }
 
-        /* 隱藏原生 checkbox，改由卡片本身作為選取元件 */
         .checkbox-card {
             display: flex;
             align-items: center;
             justify-content: center;
             background: #ffffff;
             border: 1px solid var(--border-color);
-            padding: 8px 6px;
-            border-radius: 6px;
+            padding: 9px 6px;
+            border-radius: 8px;
             cursor: pointer;
             transition: all 0.15s ease;
             font-size: 13px;
             user-select: none;
             text-align: center;
             color: var(--text-main);
+            box-shadow: 0 1px 2px rgba(0,0,0,0.02);
         }
 
         .checkbox-card input {
@@ -125,19 +165,30 @@
 
         .checkbox-card:hover {
             border-color: var(--primary);
-            background: #f8fafc;
+            background: #f1f5f9;
         }
 
-        /* 點選後反藍樣式 */
-        .checkbox-card.checked {
+        /* 車輛專用：點選後反紅 */
+        .car-card.checked {
+            background: var(--danger);
+            border-color: var(--danger);
+            color: #ffffff;
+            font-weight: 600;
+            box-shadow: 0 2px 4px rgba(220, 38, 38, 0.3);
+        }
+        .car-card:hover {
+            border-color: var(--danger) !important;
+        }
+
+        /* 人員專用：點選後反藍 */
+        .person-card.checked {
             background: var(--primary);
             border-color: var(--primary);
             color: #ffffff;
-            font-weight: 500;
-            box-shadow: 0 2px 4px rgba(37, 99, 235, 0.2);
+            font-weight: 600;
+            box-shadow: 0 2px 4px rgba(37, 99, 235, 0.3);
         }
 
-        /* 表單欄位 */
         .flex-row {
             display: flex;
             gap: 12px;
@@ -157,82 +208,80 @@
             display: block;
             font-size: 12px;
             color: var(--text-muted);
-            margin-bottom: 4px;
-            font-weight: 500;
+            margin-bottom: 6px;
+            font-weight: 600;
         }
 
         input[type="text"] {
             width: 100%;
-            padding: 9px 12px;
+            padding: 10px 14px;
             box-sizing: border-box;
             border: 1px solid var(--border-color);
-            border-radius: 6px;
+            border-radius: 8px;
             font-size: 14px;
             background: #fff;
-            transition: border-color 0.15s;
+            transition: all 0.15s;
         }
 
         input[type="text"]:focus {
             outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+            border-color: #f97316;
+            box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.12);
         }
 
-        /* 職稱標籤 */
         .category-badge {
             font-size: 12px;
             font-weight: 600;
-            color: #475569;
-            background: #e2e8f0;
-            padding: 2px 8px;
-            border-radius: 4px;
+            color: #1e40af;
+            background: #dbeafe;
+            padding: 3px 10px;
+            border-radius: 6px;
             display: inline-block;
-            margin-top: 10px;
-            margin-bottom: 6px;
+            margin-top: 12px;
+            margin-bottom: 8px;
         }
 
         .category-badge:first-of-type {
             margin-top: 0;
         }
 
-        /* 放大後的輸出結果區塊 */
         .output-box {
-            background: #1e293b;
-            color: #f8fafc;
-            border: none;
+            background: #020617;
+            color: #38bdf8;
+            border: 1px solid #1e293b;
             padding: 18px;
-            border-radius: 8px;
+            border-radius: 10px;
             white-space: pre-wrap;
             word-break: break-all;
             font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
             font-size: 14px;
             line-height: 1.7;
-            min-height: 280px; /* 增加高度，使結果區塊顯得更大更寬敞 */
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
+            min-height: 280px;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.4);
         }
 
         .btn {
             width: 100%;
-            background: linear-gradient(135deg, var(--primary), var(--primary-hover));
+            background: linear-gradient(135deg, #6366f1, #4f46e5);
             color: white;
             border: none;
             padding: 12px 20px;
-            font-size: 16px;
-            font-weight: 500;
-            border-radius: 6px;
+            font-size: 15px;
+            font-weight: 600;
+            border-radius: 8px;
             cursor: pointer;
             transition: all 0.2s;
             display: inline-flex;
             justify-content: center;
             align-items: center;
             gap: 8px;
-            margin-top: 14px;
-            box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2);
+            margin-top: 16px;
+            box-shadow: 0 4px 6px -1px rgba(99, 102, 241, 0.3);
         }
 
         .btn:hover {
             transform: translateY(-1px);
-            box-shadow: 0 6px 8px -1px rgba(37, 99, 235, 0.3);
+            box-shadow: 0 6px 10px -1px rgba(99, 102, 241, 0.4);
         }
 
         .btn:active {
@@ -243,15 +292,15 @@
 <body>
 
 <div class="container">
-    <h2>📄 中山分隊受理災害登記簿登打輔助系統</h2>
+    <h2>📋 中山分隊受理災害登記簿登打輔助系統</h2>
 
     <div class="main-layout">
         <!-- 左側欄位：1, 2, 3 區塊 -->
         <div class="column">
-            <!-- 基本資訊區 -->
-            <div class="section-group">
+            <!-- 區塊一：基本案件資訊 -->
+            <div class="section-group section-info">
                 <h3>📍 1. 基本案件資訊</h3>
-                <div class="flex-row" style="margin-bottom: 10px;">
+                <div class="flex-row" style="margin-bottom: 12px;">
                     <div class="flex-col">
                         <label class="field-label">案件地址</label>
                         <input type="text" id="address" value="" placeholder="請輸入案件地址" oninput="updateOutput()">
@@ -267,87 +316,87 @@
                 </div>
             </div>
 
-            <!-- 車輛點選區 -->
-            <div class="section-group">
+            <!-- 區塊二：出勤車輛 -->
+            <div class="section-group section-car">
                 <h3>🚒 2. 出勤車輛 (可複選)</h3>
                 <div id="carList" class="grid-options">
-                    <label class="checkbox-card" onclick="toggleCard(this)"><input type="checkbox" value="11車"> 11車</label>
-                    <label class="checkbox-card" onclick="toggleCard(this)"><input type="checkbox" value="12車"> 12車</label>
-                    <label class="checkbox-card" onclick="toggleCard(this)"><input type="checkbox" value="16車"> 16車</label>
-                    <label class="checkbox-card" onclick="toggleCard(this)"><input type="checkbox" value="33車"> 33車</label>
-                    <label class="checkbox-card" onclick="toggleCard(this)"><input type="checkbox" value="41車"> 41車</label>
-                    <label class="checkbox-card" onclick="toggleCard(this)"><input type="checkbox" value="42車"> 42車</label>
-                    <label class="checkbox-card" onclick="toggleCard(this)"><input type="checkbox" value="43車"> 43車</label>
-                    <label class="checkbox-card" onclick="toggleCard(this)"><input type="checkbox" value="51車"> 51車</label>
-                    <label class="checkbox-card" onclick="toggleCard(this)"><input type="checkbox" value="61車"> 61車</label>
-                    <label class="checkbox-card" onclick="toggleCard(this)"><input type="checkbox" value="91車"> 91車</label>
-                    <label class="checkbox-card" onclick="toggleCard(this)"><input type="checkbox" value="92車"> 92車</label>
+                    <label class="checkbox-card car-card" onclick="toggleCard(this)"><input type="checkbox" value="11車"> 11車</label>
+                    <label class="checkbox-card car-card" onclick="toggleCard(this)"><input type="checkbox" value="12車"> 12車</label>
+                    <label class="checkbox-card car-card" onclick="toggleCard(this)"><input type="checkbox" value="16車"> 16車</label>
+                    <label class="checkbox-card car-card" onclick="toggleCard(this)"><input type="checkbox" value="33車"> 33車</label>
+                    <label class="checkbox-card car-card" onclick="toggleCard(this)"><input type="checkbox" value="41車"> 41車</label>
+                    <label class="checkbox-card car-card" onclick="toggleCard(this)"><input type="checkbox" value="42車"> 42車</label>
+                    <label class="checkbox-card car-card" onclick="toggleCard(this)"><input type="checkbox" value="43車"> 43車</label>
+                    <label class="checkbox-card car-card" onclick="toggleCard(this)"><input type="checkbox" value="51車"> 51車</label>
+                    <label class="checkbox-card car-card" onclick="toggleCard(this)"><input type="checkbox" value="61車"> 61車</label>
+                    <label class="checkbox-card car-card" onclick="toggleCard(this)"><input type="checkbox" value="91車"> 91車</label>
+                    <label class="checkbox-card car-card" onclick="toggleCard(this)"><input type="checkbox" value="92車"> 92車</label>
                 </div>
             </div>
 
-            <!-- 人員點選區 -->
-            <div class="section-group">
+            <!-- 區塊三：出勤人員 -->
+            <div class="section-group section-person">
                 <h3>👨‍🚒 3. 出勤人員 (可複選)</h3>
                 
                 <div>
                     <span class="category-badge">分隊長</span>
                     <div class="grid-options">
-                        <label class="checkbox-card" onclick="toggleCard(this)"><input type="checkbox" class="person-chk" data-title="分隊長" value="歐顯孝"> 歐顯孝</label>
+                        <label class="checkbox-card person-card" onclick="toggleCard(this)"><input type="checkbox" class="person-chk" data-title="分隊長" value="歐顯孝"> 歐顯孝</label>
                     </div>
                 </div>
 
                 <div>
                     <span class="category-badge">小隊長</span>
                     <div class="grid-options">
-                        <label class="checkbox-card" onclick="toggleCard(this)"><input type="checkbox" class="person-chk" data-title="小隊長" value="曾世璿"> 曾世璿</label>
-                        <label class="checkbox-card" onclick="toggleCard(this)"><input type="checkbox" class="person-chk" data-title="小隊長" value="楊春長"> 楊春長</label>
-                        <label class="checkbox-card" onclick="toggleCard(this)"><input type="checkbox" class="person-chk" data-title="小隊長" value="黃健閔"> 黃健閔</label>
-                        <label class="checkbox-card" onclick="toggleCard(this)"><input type="checkbox" class="person-chk" data-title="小隊長" value="蔡昇志"> 蔡昇志</label>
-                        <label class="checkbox-card" onclick="toggleCard(this)"><input type="checkbox" class="person-chk" data-title="小隊長" value="吳柏佑"> 吳柏佑</label>
+                        <label class="checkbox-card person-card" onclick="toggleCard(this)"><input type="checkbox" class="person-chk" data-title="小隊長" value="曾世璿"> 曾世璿</label>
+                        <label class="checkbox-card person-card" onclick="toggleCard(this)"><input type="checkbox" class="person-chk" data-title="小隊長" value="楊春長"> 楊春長</label>
+                        <label class="checkbox-card person-card" onclick="toggleCard(this)"><input type="checkbox" class="person-chk" data-title="小隊長" value="黃健閔"> 黃健閔</label>
+                        <label class="checkbox-card person-card" onclick="toggleCard(this)"><input type="checkbox" class="person-chk" data-title="小隊長" value="蔡昇志"> 蔡昇志</label>
+                        <label class="checkbox-card person-card" onclick="toggleCard(this)"><input type="checkbox" class="person-chk" data-title="小隊長" value="吳柏佑"> 吳柏佑</label>
                     </div>
                 </div>
 
                 <div>
                     <span class="category-badge">隊員</span>
                     <div class="grid-options">
-                        <label class="checkbox-card" onclick="toggleCard(this)"><input type="checkbox" class="person-chk" data-title="隊員" value="謝咏勲"> 謝咏勲</label>
-                        <label class="checkbox-card" onclick="toggleCard(this)"><input type="checkbox" class="person-chk" data-title="隊員" value="施智偉"> 施智偉</label>
-                        <label class="checkbox-card" onclick="toggleCard(this)"><input type="checkbox" class="person-chk" data-title="隊員" value="廖唯伸"> 廖唯伸</label>
-                        <label class="checkbox-card" onclick="toggleCard(this)"><input type="checkbox" class="person-chk" data-title="隊員" value="施明谷"> 施明谷</label>
-                        <label class="checkbox-card" onclick="toggleCard(this)"><input type="checkbox" class="person-chk" data-title="隊員" value="游登翔"> 游登翔</label>
-                        <label class="checkbox-card" onclick="toggleCard(this)"><input type="checkbox" class="person-chk" data-title="隊員" value="林育豪"> 林育豪</label>
-                        <label class="checkbox-card" onclick="toggleCard(this)"><input type="checkbox" class="person-chk" data-title="隊員" value="范庭嘉"> 范庭嘉</label>
-                        <label class="checkbox-card" onclick="toggleCard(this)"><input type="checkbox" class="person-chk" data-title="隊員" value="吳康豪"> 吳康豪</label>
-                        <label class="checkbox-card" onclick="toggleCard(this)"><input type="checkbox" class="person-chk" data-title="隊員" value="古奇峯"> 古奇峯</label>
-                        <label class="checkbox-card" onclick="toggleCard(this)"><input type="checkbox" class="person-chk" data-title="隊員" value="侯鈞婷"> 侯鈞婷</label>
-                        <label class="checkbox-card" onclick="toggleCard(this)"><input type="checkbox" class="person-chk" data-title="隊員" value="魏志宇"> 魏志宇</label>
-                        <label class="checkbox-card" onclick="toggleCard(this)"><input type="checkbox" class="person-chk" data-title="隊員" value="蔡侑築"> 蔡侑築</label>
-                        <label class="checkbox-card" onclick="toggleCard(this)"><input type="checkbox" class="person-chk" data-title="隊員" value="盧功榮"> 盧功榮</label>
-                        <label class="checkbox-card" onclick="toggleCard(this)"><input type="checkbox" class="person-chk" data-title="隊員" value="華昱銘"> 華昱銘</label>
-                        <label class="checkbox-card" onclick="toggleCard(this)"><input type="checkbox" class="person-chk" data-title="隊員" value="廖延宗"> 廖延宗</label>
-                        <label class="checkbox-card" onclick="toggleCard(this)"><input type="checkbox" class="person-chk" data-title="隊員" value="劉羽程"> 劉羽程</label>
-                        <label class="checkbox-card" onclick="toggleCard(this)"><input type="checkbox" class="person-chk" data-title="隊員" value="王柏翔"> 王柏翔</label>
-                        <label class="checkbox-card" onclick="toggleCard(this)"><input type="checkbox" class="person-chk" data-title="隊員" value="蘇信衡"> 蘇信衡</label>
-                        <label class="checkbox-card" onclick="toggleCard(this)"><input type="checkbox" class="person-chk" data-title="隊員" value="黃榮祥"> 黃榮祥</label>
-                        <label class="checkbox-card" onclick="toggleCard(this)"><input type="checkbox" class="person-chk" data-title="隊員" value="來祐興"> 來祐興</label>
-                        <label class="checkbox-card" onclick="toggleCard(this)"><input type="checkbox" class="person-chk" data-title="隊員" value="陳建銘"> 陳建銘</label>
-                        <label class="checkbox-card" onclick="toggleCard(this)"><input type="checkbox" class="person-chk" data-title="隊員" value="陳俞霈"> 陳俞霈</label>
-                        <label class="checkbox-card" onclick="toggleCard(this)"><input type="checkbox" class="person-chk" data-title="隊員" value="林峰玉"> 林峰玉</label>
-                        <label class="checkbox-card" onclick="toggleCard(this)"><input type="checkbox" class="person-chk" data-title="隊員" value="李佳陽"> 李佳陽</label>
-                        <label class="checkbox-card" onclick="toggleCard(this)"><input type="checkbox" class="person-chk" data-title="隊員" value="林晨賢"> 林晨賢</label>
-                        <label class="checkbox-card" onclick="toggleCard(this)"><input type="checkbox" class="person-chk" data-title="隊員" value="吳晟豪"> 吳晟豪</label>
-                        <label class="checkbox-card" onclick="toggleCard(this)"><input type="checkbox" class="person-chk" data-title="隊員" value="廖晟翔"> 廖晟翔</label>
-                        <label class="checkbox-card" onclick="toggleCard(this)"><input type="checkbox" class="person-chk" data-title="隊員" value="洪祥倫"> 洪祥倫</label>
-                        <label class="checkbox-card" onclick="toggleCard(this)"><input type="checkbox" class="person-chk" data-title="隊員" value="廖芳瑜"> 廖芳瑜</label>
-                        <label class="checkbox-card" onclick="toggleCard(this)"><input type="checkbox" class="person-chk" data-title="隊員" value="施冠宇"> 施冠宇</label>
+                        <label class="checkbox-card person-card" onclick="toggleCard(this)"><input type="checkbox" class="person-chk" data-title="隊員" value="謝咏勲"> 謝咏勲</label>
+                        <label class="checkbox-card person-card" onclick="toggleCard(this)"><input type="checkbox" class="person-chk" data-title="隊員" value="施智偉"> 施智偉</label>
+                        <label class="checkbox-card person-card" onclick="toggleCard(this)"><input type="checkbox" class="person-chk" data-title="隊員" value="廖唯伸"> 廖唯伸</label>
+                        <label class="checkbox-card person-card" onclick="toggleCard(this)"><input type="checkbox" class="person-chk" data-title="隊員" value="施明谷"> 施明谷</label>
+                        <label class="checkbox-card person-card" onclick="toggleCard(this)"><input type="checkbox" class="person-chk" data-title="隊員" value="游登翔"> 游登翔</label>
+                        <label class="checkbox-card person-card" onclick="toggleCard(this)"><input type="checkbox" class="person-chk" data-title="隊員" value="林育豪"> 林育豪</label>
+                        <label class="checkbox-card person-card" onclick="toggleCard(this)"><input type="checkbox" class="person-chk" data-title="隊員" value="范庭嘉"> 范庭嘉</label>
+                        <label class="checkbox-card person-card" onclick="toggleCard(this)"><input type="checkbox" class="person-chk" data-title="隊員" value="吳康豪"> 吳康豪</label>
+                        <label class="checkbox-card person-card" onclick="toggleCard(this)"><input type="checkbox" class="person-chk" data-title="隊員" value="古奇峯"> 古奇峯</label>
+                        <label class="checkbox-card person-card" onclick="toggleCard(this)"><input type="checkbox" class="person-chk" data-title="隊員" value="侯鈞婷"> 侯鈞婷</label>
+                        <label class="checkbox-card person-card" onclick="toggleCard(this)"><input type="checkbox" class="person-chk" data-title="隊員" value="魏志宇"> 魏志宇</label>
+                        <label class="checkbox-card person-card" onclick="toggleCard(this)"><input type="checkbox" class="person-chk" data-title="隊員" value="蔡侑築"> 蔡侑築</label>
+                        <label class="checkbox-card person-card" onclick="toggleCard(this)"><input type="checkbox" class="person-chk" data-title="隊員" value="盧功榮"> 盧功榮</label>
+                        <label class="checkbox-card person-card" onclick="toggleCard(this)"><input type="checkbox" class="person-chk" data-title="隊員" value="華昱銘"> 華昱銘</label>
+                        <label class="checkbox-card person-card" onclick="toggleCard(this)"><input type="checkbox" class="person-chk" data-title="隊員" value="廖延宗"> 廖延宗</label>
+                        <label class="checkbox-card person-card" onclick="toggleCard(this)"><input type="checkbox" class="person-chk" data-title="隊員" value="劉羽程"> 劉羽程</label>
+                        <label class="checkbox-card person-card" onclick="toggleCard(this)"><input type="checkbox" class="person-chk" data-title="隊員" value="王柏翔"> 王柏翔</label>
+                        <label class="checkbox-card person-card" onclick="toggleCard(this)"><input type="checkbox" class="person-chk" data-title="隊員" value="蘇信衡"> 蘇信衡</label>
+                        <label class="checkbox-card person-card" onclick="toggleCard(this)"><input type="checkbox" class="person-chk" data-title="隊員" value="黃榮祥"> 黃榮祥</label>
+                        <label class="checkbox-card person-card" onclick="toggleCard(this)"><input type="checkbox" class="person-chk" data-title="隊員" value="來祐興"> 來祐興</label>
+                        <label class="checkbox-card person-card" onclick="toggleCard(this)"><input type="checkbox" class="person-chk" data-title="隊員" value="陳建銘"> 陳建銘</label>
+                        <label class="checkbox-card person-card" onclick="toggleCard(this)"><input type="checkbox" class="person-chk" data-title="隊員" value="陳俞霈"> 陳俞霈</label>
+                        <label class="checkbox-card person-card" onclick="toggleCard(this)"><input type="checkbox" class="person-chk" data-title="隊員" value="林峰玉"> 林峰玉</label>
+                        <label class="checkbox-card person-card" onclick="toggleCard(this)"><input type="checkbox" class="person-chk" data-title="隊員" value="李佳陽"> 李佳陽</label>
+                        <label class="checkbox-card person-card" onclick="toggleCard(this)"><input type="checkbox" class="person-chk" data-title="隊員" value="林晨賢"> 林晨賢</label>
+                        <label class="checkbox-card person-card" onclick="toggleCard(this)"><input type="checkbox" class="person-chk" data-title="隊員" value="吳晟豪"> 吳晟豪</label>
+                        <label class="checkbox-card person-card" onclick="toggleCard(this)"><input type="checkbox" class="person-chk" data-title="隊員" value="廖晟翔"> 廖晟翔</label>
+                        <label class="checkbox-card person-card" onclick="toggleCard(this)"><input type="checkbox" class="person-chk" data-title="隊員" value="洪祥倫"> 洪祥倫</label>
+                        <label class="checkbox-card person-card" onclick="toggleCard(this)"><input type="checkbox" class="person-chk" data-title="隊員" value="廖芳瑜"> 廖芳瑜</label>
+                        <label class="checkbox-card person-card" onclick="toggleCard(this)"><input type="checkbox" class="person-chk" data-title="隊員" value="施冠宇"> 施冠宇</label>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- 右側欄位：4. 放大後的產出文字結果 (Sticky) -->
+        <!-- 區塊四：產出文字結果 -->
         <div class="column sticky-column">
-            <div class="section-group">
+            <div class="section-group section-output">
                 <h3>📋 4. 產出文字結果</h3>
                 <div id="outputBox" class="output-box"></div>
                 <button class="btn" onclick="copyText()">
@@ -360,7 +409,7 @@
 </div>
 
 <script>
-// 點擊整張卡片切換選取狀態與反藍樣式
+// 點擊整張卡片切換選取狀態與顏色樣式
 function toggleCard(card) {
     const checkbox = card.querySelector('input[type="checkbox"]');
     checkbox.checked = !checkbox.checked;
