@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>📋 中山分隊受理災害登記簿登打輔助系統</title>
     <style>
-        /* 現代化色彩變數 (參考 Tailwind CSS 系統) */
+        /* 現代化色彩變數 */
         :root {
             /* 橘黃色系 (基本資訊) */
             --info-main: #f59e0b;
@@ -25,11 +25,23 @@
             --person-border: #bfdbfe;
             --person-ring: rgba(59, 130, 246, 0.2);
 
-            /* 紫色系 (產出結果) */
-            --output-main: #8b5cf6;
-            --output-light: #faf5ff;
-            --output-border: #ddd6fe;
-            --output-ring: rgba(139, 92, 246, 0.2);
+            /* 綠色系 (分隊初報) */
+            --out1-main: #10b981;
+            --out1-light: #ecfdf5;
+            --out1-border: #a7f3d0;
+            --out1-ring: rgba(16, 185, 129, 0.2);
+
+            /* 紫色系 (分隊結報) */
+            --out2-main: #8b5cf6;
+            --out2-light: #faf5ff;
+            --out2-border: #ddd6fe;
+            --out2-ring: rgba(139, 92, 246, 0.2);
+
+            /* 粉紅色系 (處理情形) */
+            --out3-main: #ec4899;
+            --out3-light: #fdf2f8;
+            --out3-border: #fbcfe8;
+            --out3-ring: rgba(236, 72, 153, 0.2);
             
             /* 中性色系 */
             --bg-color: #f8fafc;
@@ -61,9 +73,10 @@
             -webkit-font-smoothing: antialiased;
         }
 
+        /* 針對 2K 顯示器最佳化的寬度設定 */
         .container {
-            width: 96%; 
-            max-width: 2200px; 
+            width: 98%; 
+            max-width: 2560px; /* 完美匹配 2K 解析度寬度 */
             margin: 0 auto;
         }
 
@@ -141,7 +154,7 @@
             left: 0; top: 0; bottom: 0; width: 6px;
         }
 
-        /* 四大主題色系設定 */
+        /* 主題色系設定 - 左/中區 */
         .section-info { background-color: var(--info-light); border: 1px solid var(--info-border); }
         .section-info::before { background-color: var(--info-main); }
         
@@ -151,8 +164,15 @@
         .section-person { background-color: var(--person-light); border: 1px solid var(--person-border); }
         .section-person::before { background-color: var(--person-main); }
         
-        .section-output { background-color: var(--output-light); border: 1px solid var(--output-border); }
-        .section-output::before { background-color: var(--output-main); } 
+        /* 主題色系設定 - 右區獨立產出 */
+        .section-out1 { background-color: var(--out1-light); border: 1px solid var(--out1-border); }
+        .section-out1::before { background-color: var(--out1-main); }
+        
+        .section-out2 { background-color: var(--out2-light); border: 1px solid var(--out2-border); }
+        .section-out2::before { background-color: var(--out2-main); }
+
+        .section-out3 { background-color: var(--out3-light); border: 1px solid var(--out3-border); }
+        .section-out3::before { background-color: var(--out3-main); }
 
         .section-group h3 {
             margin-top: 0;
@@ -296,11 +316,10 @@
         }
         .category-group:first-child .category-badge { margin-top: 0; }
 
-        /* 產出結果區塊 */
+        /* 產出結果區塊文字框 */
         .output-box {
             background: #ffffff;
             color: var(--text-main);
-            border: 2px solid var(--output-border);
             padding: 20px;
             border-radius: var(--radius-lg);
             white-space: pre-wrap;
@@ -313,10 +332,14 @@
             transition: all 0.3s ease;
         }
 
-        /* 標題列的一鍵複製按鈕 */
+        /* 個別產出框的邊框顏色 */
+        .section-out1 .output-box { border: 2px solid var(--out1-border); }
+        .section-out2 .output-box { border: 2px solid var(--out2-border); }
+        .section-out3 .output-box { border: 2px solid var(--out3-border); }
+
+        /* 標題列的一鍵複製按鈕共用樣式 */
         .copy-header-btn {
             margin-left: auto;
-            background: linear-gradient(135deg, var(--output-main), #7c3aed);
             color: white;
             border: none;
             padding: 8px 16px;
@@ -329,20 +352,38 @@
             justify-content: center;
             align-items: center;
             gap: 6px;
-            box-shadow: 0 4px 12px var(--output-ring);
         }
         .copy-header-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(139, 92, 246, 0.35);
             filter: brightness(1.05);
         }
         .copy-header-btn:active { 
             transform: translateY(0) scale(0.96); 
-            box-shadow: 0 2px 6px rgba(139, 92, 246, 0.3); 
         }
+
+        /* 獨立按鈕顏色 */
+        .section-out1 .copy-header-btn {
+            background: linear-gradient(135deg, var(--out1-main), #059669);
+            box-shadow: 0 4px 12px var(--out1-ring);
+        }
+        .section-out1 .copy-header-btn:hover { box-shadow: 0 6px 16px rgba(16, 185, 129, 0.35); }
+
+        .section-out2 .copy-header-btn {
+            background: linear-gradient(135deg, var(--out2-main), #7c3aed);
+            box-shadow: 0 4px 12px var(--out2-ring);
+        }
+        .section-out2 .copy-header-btn:hover { box-shadow: 0 6px 16px rgba(139, 92, 246, 0.35); }
+
+        .section-out3 .copy-header-btn {
+            background: linear-gradient(135deg, var(--out3-main), #be185d);
+            box-shadow: 0 4px 12px var(--out3-ring);
+        }
+        .section-out3 .copy-header-btn:hover { box-shadow: 0 6px 16px rgba(236, 72, 153, 0.35); }
+
+        /* 複製成功的共用樣式 */
         .copy-header-btn.success {
-            background: linear-gradient(135deg, #10b981, #059669);
-            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+            background: linear-gradient(135deg, #10b981, #059669) !important;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3) !important;
         }
     </style>
 </head>
@@ -367,6 +408,16 @@
                 <div style="margin-bottom: 24px;">
                     <label class="field-label">案件地址</label>
                     <input type="text" id="address" value="" placeholder="請輸入案件地址..." oninput="updateOutput()">
+                    <!-- 案件地址快速按鈕 -->
+                    <div class="preset-group">
+                        <span class="preset-btn" onclick="quickFill('address', '太平區')">太平區</span>
+                        <span class="preset-btn" onclick="quickFill('address', '北屯區')">北屯區</span>
+                        <span class="preset-btn" onclick="quickFill('address', '北區')">北區</span>
+                        <span class="preset-btn" onclick="quickFill('address', '東區')">東區</span>
+                        <span class="preset-btn" onclick="quickFill('address', '中區')">中區</span>
+                        <span class="preset-btn" onclick="quickFill('address', '西區')">西區</span>
+                        <span class="preset-btn" onclick="quickFill('address', '大里區')">大里區</span>
+                    </div>
                 </div>
 
                 <div style="margin-bottom: 24px;">
@@ -440,8 +491,8 @@
                 <div class="category-group">
                     <span class="category-badge">小隊長</span>
                     <div class="grid-options">
-                        <label class="checkbox-card person-card" onclick="toggleCard(this)"><input type="checkbox" class="person-chk" data-title="小隊長" value="曾世璿"> 曾世璿</label>
                         <label class="checkbox-card person-card" onclick="toggleCard(this)"><input type="checkbox" class="person-chk" data-title="小隊長" value="楊春長"> 楊春長</label>
+                        <label class="checkbox-card person-card" onclick="toggleCard(this)"><input type="checkbox" class="person-chk" data-title="小隊長" value="曾世璿"> 曾世璿</label>
                         <label class="checkbox-card person-card" onclick="toggleCard(this)"><input type="checkbox" class="person-chk" data-title="小隊長" value="黃健閔"> 黃健閔</label>
                         <label class="checkbox-card person-card" onclick="toggleCard(this)"><input type="checkbox" class="person-chk" data-title="小隊長" value="蔡昇志"> 蔡昇志</label>
                         <label class="checkbox-card person-card" onclick="toggleCard(this)"><input type="checkbox" class="person-chk" data-title="小隊長" value="吳柏佑"> 吳柏佑</label>
@@ -489,7 +540,8 @@
         <!-- 右區：產出文字結果 -->
         <div class="column sticky-column">
             
-            <div class="section-group section-output">
+            <!-- 區塊四：初報 (綠色系) -->
+            <div class="section-group section-out1">
                 <h3>
                     4. 📝 分隊初報
                     <button class="copy-header-btn" id="copyBtnInitial" onclick="copyText('outputBoxInitial', 'copyBtnInitial')">
@@ -500,7 +552,8 @@
                 <div id="outputBoxInitial" class="output-box"></div>
             </div>
 
-            <div class="section-group section-output">
+            <!-- 區塊五：結報 (紫色系) -->
+            <div class="section-group section-out2">
                 <h3>
                     5. 📝 分隊結報
                     <button class="copy-header-btn" id="copyBtnFinal" onclick="copyText('outputBoxFinal', 'copyBtnFinal')">
@@ -511,7 +564,8 @@
                 <div id="outputBoxFinal" class="output-box"></div>
             </div>
 
-            <div class="section-group section-output">
+            <!-- 區塊六：處理情形 (粉色系) -->
+            <div class="section-group section-out3">
                 <h3>
                     6. 📝 分隊處理情形
                     <button class="copy-header-btn" id="copyBtn" onclick="copyText('outputBox', 'copyBtn')">
