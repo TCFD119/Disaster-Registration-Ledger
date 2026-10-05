@@ -48,15 +48,15 @@
             letter-spacing: 0.5px;
         }
 
-        /* 左右雙欄響應式排版，適應超寬螢幕 */
+        /* 三等份響應式排版 */
         .main-layout {
             display: grid;
-            grid-template-columns: 1fr minmax(500px, 700px);
+            grid-template-columns: repeat(3, 1fr);
             gap: 40px;
             align-items: start;
         }
 
-        @media (max-width: 1024px) {
+        @media (max-width: 1200px) {
             .main-layout {
                 grid-template-columns: 1fr;
             }
@@ -314,11 +314,11 @@
     <h2>📋 中山分隊受理災害登記簿登打系統</h2>
 
     <div class="main-layout">
-        <!-- 左側欄位 -->
+        <!-- 左區：基本案件資訊與出勤車輛 -->
         <div class="column">
             <!-- 區塊一：基本案件資訊 -->
             <div class="section-group section-info">
-                <h3>📍 1. 基本案件資訊</h3>
+                <h3>1. 📍 基本案件資訊</h3>
                 <div class="flex-row" style="margin-bottom: 24px;">
                     <div class="flex-col">
                         <label class="field-label">案件地址</label>
@@ -356,7 +356,7 @@
 
             <!-- 區塊二：出勤車輛 -->
             <div class="section-group section-car">
-                <h3>🚒 2. 出勤車輛 <span style="font-size: 14px; color: var(--text-muted); font-weight: normal;">(可複選)</span></h3>
+                <h3>2. 🚒 出勤車輛 <span style="font-size: 14px; color: var(--text-muted); font-weight: normal;">(可複選)</span></h3>
                 <div id="carList" class="grid-options">
                     <label class="checkbox-card car-card" onclick="toggleCard(this)"><input type="checkbox" value="11車"> 11車</label>
                     <label class="checkbox-card car-card" onclick="toggleCard(this)"><input type="checkbox" value="12車"> 12車</label>
@@ -371,10 +371,13 @@
                     <label class="checkbox-card car-card" onclick="toggleCard(this)"><input type="checkbox" value="92車"> 92車</label>
                 </div>
             </div>
+        </div>
 
+        <!-- 中區：出勤人員 -->
+        <div class="column">
             <!-- 區塊三：出勤人員 -->
             <div class="section-group section-person">
-                <h3>👨‍🚒 3. 出勤人員 <span style="font-size: 14px; color: var(--text-muted); font-weight: normal;">(可複選)</span></h3>
+                <h3>3. 👨‍🚒 出勤人員 <span style="font-size: 14px; color: var(--text-muted); font-weight: normal;">(可複選)</span></h3>
                 
                 <div class="category-group">
                     <span class="category-badge">分隊長</span>
@@ -432,10 +435,10 @@
             </div>
         </div>
 
-        <!-- 區塊四：產出文字結果 -->
+        <!-- 右區：產出文字結果 -->
         <div class="column sticky-column">
             <div class="section-group section-output">
-                <h3>📝 4. 產出文字結果</h3>
+                <h3>4. 📝 產出文字結果</h3>
                 <div id="outputBox" class="output-box"></div>
                 <button class="btn" id="copyBtn" onclick="copyText()">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
