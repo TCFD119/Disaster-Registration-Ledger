@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>📋 中山分隊受理災害登記簿登打輔助系統</title>
+    <title>📋 中山分隊案件處理情形 登打輔助系統</title>
     <style>
         /* 現代化色彩變數 */
         :root {
@@ -391,7 +391,7 @@
 
 <div class="container">
     <div class="header-title">
-        <h2>📋 中山分隊受理災害登記輔助系統</h2>
+        <h2>📋 中山分隊案件處理情形 登打輔助系統</h2>
     </div>
 
     <div class="main-layout">
@@ -679,7 +679,7 @@ function updateOutput() {
     
     let textFinal = `中山分隊報告(結報):\n一、本局於${caseTime}受理${address}${dutyType}，派遣中山${carsStr}共${carCount}車${personCount}人，由${leaderStr}帶隊前往。\n二、${statusNote}。`;
     
-    let textProcess = `中山分隊處理情形：\n案件時間：${caseTime}\n一、至${address}執行${dutyType}。\n二、${statusNote}。\n三、出勤車輛:${carsStr}。\n四、出勤人員:${personsStr}`;
+    let textProcess = `中山分隊處理情形：\n一、至${address}執行${dutyType}勤務。\n二、${statusNote}。\n三、出勤車輛:${carsStr}。\n四、出勤人員:${personsStr}`;
 
     document.getElementById('outputBoxInitial').innerText = textInitial;
     document.getElementById('outputBoxFinal').innerText = textFinal;
