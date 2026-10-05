@@ -5,64 +5,99 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>📋 中山分隊受理災害登記簿登打輔助系統</title>
     <style>
+        /* 現代化色彩變數 (參考 Tailwind CSS 系統) */
         :root {
-            --primary: #3b82f6;
-            --primary-light: #eff6ff;
-            --danger: #ef4444;
-            --danger-light: #fef2f2;
-            --warning: #f97316;
-            --bg-color: #f1f5f9;
+            /* 橘黃色系 (基本資訊) */
+            --info-main: #f59e0b;
+            --info-light: #fffbeb;
+            --info-border: #fcd34d;
+            --info-ring: rgba(245, 158, 11, 0.2);
+
+            /* 紅色系 (車輛) */
+            --car-main: #ef4444;
+            --car-light: #fef2f2;
+            --car-border: #fca5a5;
+            --car-ring: rgba(239, 68, 68, 0.2);
+
+            /* 藍色系 (人員) */
+            --person-main: #3b82f6;
+            --person-light: #eff6ff;
+            --person-border: #bfdbfe;
+            --person-ring: rgba(59, 130, 246, 0.2);
+
+            /* 紫色系 (產出結果) */
+            --output-main: #8b5cf6;
+            --output-light: #faf5ff;
+            --output-border: #ddd6fe;
+            --output-ring: rgba(139, 92, 246, 0.2);
+            
+            /* 中性色系 */
+            --bg-color: #f8fafc;
             --card-bg: #ffffff;
             --text-main: #0f172a;
             --text-muted: #64748b;
             --border-color: #e2e8f0;
-            --radius-lg: 16px;
+            
+            /* 圓角與陰影 */
+            --radius-xl: 20px;
+            --radius-lg: 14px;
             --radius-md: 10px;
             --radius-pill: 999px;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.025);
+            --shadow-hover: 0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
         }
 
         body {
-            font-family: "SF Pro TC", "SF Pro Text", "Microsoft JhengHei", system-ui, -apple-system, sans-serif;
+            font-family: "SF Pro TC", "SF Pro Text", "PingFang TC", "Microsoft JhengHei", system-ui, -apple-system, sans-serif;
             background-color: var(--bg-color);
+            background-image: radial-gradient(#e2e8f0 1px, transparent 1px);
+            background-size: 24px 24px;
             color: var(--text-main);
             margin: 0;
-            padding: 40px 0; 
+            padding: 30px 0 60px 0; 
             box-sizing: border-box;
-            line-height: 1.5;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
         }
 
-        /* 針對 2K (2560px) 螢幕調整容器最大寬度 */
         .container {
             width: 96%; 
-            max-width: 2500px; 
+            max-width: 2200px; 
             margin: 0 auto;
         }
 
-        h2 {
+        .header-title {
             text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .header-title h2 {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
             color: var(--text-main);
-            margin-top: 0;
-            margin-bottom: 30px;
-            font-size: 28px;
+            margin: 0;
+            font-size: 32px;
             font-weight: 800;
-            letter-spacing: 0.5px;
+            letter-spacing: 1px;
+            padding: 12px 28px;
+            background: var(--card-bg);
+            border-radius: var(--radius-pill);
+            box-shadow: var(--shadow-md);
+            border: 1px solid rgba(255,255,255,0.8);
         }
 
-        /* 三等份響應式排版 */
         .main-layout {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 40px;
+            gap: 32px;
             align-items: start;
         }
 
         @media (max-width: 1200px) {
-            .main-layout {
-                grid-template-columns: 1fr;
-            }
-            .sticky-column {
-                position: static !important;
-            }
+            .main-layout { grid-template-columns: 1fr; }
+            .sticky-column { position: static !important; max-height: none !important; }
         }
 
         .column {
@@ -72,277 +107,285 @@
             min-width: 0;
         }
 
+        /* 右側滾動條美化 */
         .sticky-column {
             position: sticky;
-            top: 40px;
+            top: 24px;
+            max-height: calc(100vh - 48px);
+            overflow-y: auto;
+            padding-right: 8px;
         }
+        .sticky-column::-webkit-scrollbar { width: 6px; }
+        .sticky-column::-webkit-scrollbar-track { background: transparent; }
+        .sticky-column::-webkit-scrollbar-thumb {
+            background-color: #cbd5e1;
+            border-radius: var(--radius-pill);
+        }
+        .sticky-column::-webkit-scrollbar-thumb:hover { background-color: #94a3b8; }
 
-        /* 基礎區塊共用樣式 */
+        /* 區塊共用樣式 */
         .section-group {
             background: var(--card-bg);
             padding: 32px;
-            border-radius: var(--radius-lg);
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.025);
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-md);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
+            border: 1px solid rgba(0,0,0,0.03);
             overflow: hidden;
         }
-
-        .section-group:hover {
-            box-shadow: 0 12px 20px -3px rgba(0,0,0,0.08);
-        }
-
+        .section-group:hover { box-shadow: var(--shadow-hover); transform: translateY(-2px); }
         .section-group::before {
             content: "";
             position: absolute;
-            left: 0;
-            top: 0;
-            bottom: 0;
-            width: 6px;
+            left: 0; top: 0; bottom: 0; width: 6px;
         }
+
+        /* 四大主題色系設定 */
+        .section-info { background-color: var(--info-light); border: 1px solid var(--info-border); }
+        .section-info::before { background-color: var(--info-main); }
+        
+        .section-car { background-color: var(--car-light); border: 1px solid var(--car-border); }
+        .section-car::before { background-color: var(--car-main); }
+        
+        .section-person { background-color: var(--person-light); border: 1px solid var(--person-border); }
+        .section-person::before { background-color: var(--person-main); }
+        
+        .section-output { background-color: var(--output-light); border: 1px solid var(--output-border); }
+        .section-output::before { background-color: var(--output-main); } 
 
         .section-group h3 {
             margin-top: 0;
             margin-bottom: 24px;
-            font-size: 19px;
+            font-size: 20px;
             font-weight: 700;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
             color: var(--text-main);
+            border-bottom: 2px dashed rgba(0,0,0,0.06);
+            padding-bottom: 16px;
         }
 
-        /* 左側色彩識別標籤 */
-        .section-info::before { background-color: var(--warning); }
-        .section-car::before { background-color: var(--danger); }
-        .section-person::before { background-color: var(--primary); }
-        .section-output::before { background-color: #8b5cf6; } 
+        /* 數字統計標籤 */
+        .count-badge {
+            margin-left: auto;
+            color: white;
+            padding: 4px 14px;
+            border-radius: var(--radius-pill);
+            font-size: 14px;
+            font-weight: 700;
+            box-shadow: inset 0 2px 4px rgba(255,255,255,0.3), 0 2px 5px rgba(0,0,0,0.1);
+            text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
+        .count-badge.car { background: linear-gradient(135deg, #ef4444, #dc2626); }
+        .count-badge.person { background: linear-gradient(135deg, #3b82f6, #2563eb); }
 
-        /* 表單與輸入框 */
-        .flex-row { display: flex; gap: 20px; align-items: flex-start; }
-        .flex-col { flex: 1; }
-        @media (max-width: 600px) { .flex-row { flex-direction: column; } }
-
+        /* 表單元素 */
         label.field-label {
             display: block;
-            font-size: 15px;
+            font-size: 14px;
             color: var(--text-muted);
-            margin-bottom: 10px;
-            font-weight: 600;
+            margin-bottom: 8px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
         }
 
-        input[type="text"] {
+        input[type="text"], input[type="datetime-local"] {
             width: 100%;
             padding: 14px 18px;
             box-sizing: border-box;
-            border: 1.5px solid var(--border-color);
-            border-radius: var(--radius-md);
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius-lg);
             font-size: 16px;
-            background: #f8fafc;
+            background: #ffffff;
             color: var(--text-main);
             transition: all 0.2s ease;
+            font-family: inherit;
+            box-shadow: var(--shadow-sm);
         }
 
-        input[type="text"]:focus {
-            outline: none;
-            background: #ffffff;
-            border-color: var(--warning);
-            box-shadow: 0 0 0 4px rgba(249, 115, 22, 0.1);
-        }
+        .section-info input:focus { border-color: var(--info-main); box-shadow: 0 0 0 4px var(--info-ring); outline: none; }
 
-        input[type="text"]::placeholder {
-            color: #94a3b8;
-        }
-
-        /* 快速預設按鈕 (Quick-fill) */
+        /* 預設按鈕 (標籤) */
         .preset-group {
             display: flex;
             flex-wrap: wrap;
             gap: 8px;
             margin-top: 12px;
         }
-
         .preset-btn {
             font-size: 14px;
-            padding: 6px 14px;
-            background: #f1f5f9;
+            padding: 6px 16px;
+            background: #ffffff;
             color: var(--text-muted);
             border-radius: var(--radius-pill);
             cursor: pointer;
-            transition: all 0.15s ease;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
             user-select: none;
-            border: 1px solid transparent;
-            font-weight: 500;
+            border: 1px solid var(--border-color);
+            font-weight: 600;
+            box-shadow: var(--shadow-sm);
         }
-
         .preset-btn:hover {
-            background: #e2e8f0;
-            color: var(--text-main);
-            border-color: #cbd5e1;
+            color: var(--info-main);
+            border-color: var(--info-main);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 6px rgba(245, 158, 11, 0.1);
         }
+        .preset-btn:active { transform: scale(0.95); }
 
-        .preset-btn:active {
-            transform: scale(0.95);
-        }
-
-        /* 膠囊按鈕群組 (車輛/人員) */
+        /* 膠囊按鈕群組 */
         .grid-options {
             display: flex;
             flex-wrap: wrap;
             gap: 12px;
         }
-
         .checkbox-card {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            background: #f1f5f9;
-            border: 1.5px solid transparent;
-            padding: 10px 20px;
+            background: #ffffff;
+            border: 2px solid var(--border-color);
+            padding: 10px 22px;
             border-radius: var(--radius-pill);
             cursor: pointer;
             transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
             font-size: 15px;
-            font-weight: 500;
+            font-weight: 600;
             user-select: none;
             color: var(--text-muted);
+            box-shadow: var(--shadow-sm);
         }
-
-        .checkbox-card input {
-            display: none;
-        }
-
+        .checkbox-card input { display: none; }
+        
         .checkbox-card:hover {
-            background: #e2e8f0;
+            border-color: #94a3b8;
             color: var(--text-main);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
         }
+        .checkbox-card:active { transform: scale(0.96); }
 
-        /* 車輛：選取狀態 */
         .car-card.checked {
-            background: var(--danger-light);
-            border-color: #fca5a5;
-            color: var(--danger);
-            font-weight: 700;
-        }
-
-        /* 人員：選取狀態 */
-        .person-card.checked {
-            background: var(--primary-light);
-            border-color: #bfdbfe;
-            color: var(--primary);
-            font-weight: 700;
-        }
-
-        /* 職稱標籤 */
-        .category-badge {
-            font-size: 14px;
-            font-weight: 700;
-            color: var(--text-muted);
-            letter-spacing: 0.5px;
-            text-transform: uppercase;
-            display: block;
-            margin-top: 24px;
-            margin-bottom: 14px;
-            padding-bottom: 8px;
-            border-bottom: 1px solid var(--border-color);
+            background: var(--car-main);
+            border-color: var(--car-main);
+            color: white;
+            box-shadow: 0 4px 12px var(--car-ring);
         }
         
+        .person-card.checked {
+            background: var(--person-main);
+            border-color: var(--person-main);
+            color: white;
+            box-shadow: 0 4px 12px var(--person-ring);
+        }
+
+        .category-badge {
+            font-size: 13px;
+            font-weight: 800;
+            color: var(--person-main);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            display: inline-block;
+            margin-top: 24px;
+            margin-bottom: 14px;
+            padding: 4px 12px;
+            background: rgba(59, 130, 246, 0.1);
+            border-radius: 6px;
+        }
         .category-group:first-child .category-badge { margin-top: 0; }
 
         /* 產出結果區塊 */
         .output-box {
-            background: #f8fafc;
+            background: #ffffff;
             color: var(--text-main);
-            border: 1px solid var(--border-color);
-            padding: 24px;
-            border-radius: var(--radius-md);
+            border: 2px solid var(--output-border);
+            padding: 20px;
+            border-radius: var(--radius-lg);
             white-space: pre-wrap;
             word-break: break-all;
-            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-            font-size: 18px; 
-            line-height: 1.8;
-            min-height: 300px;
+            font-family: ui-monospace, "Cascadia Code", Menlo, Monaco, Consolas, monospace;
+            font-size: 16px; 
+            line-height: 1.7;
+            min-height: 80px;
             box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
             transition: all 0.3s ease;
         }
 
-        .btn {
-            width: 100%;
-            background: #8b5cf6;
+        /* 標題列的一鍵複製按鈕 */
+        .copy-header-btn {
+            margin-left: auto;
+            background: linear-gradient(135deg, var(--output-main), #7c3aed);
             color: white;
             border: none;
-            padding: 16px 24px;
-            font-size: 18px;
+            padding: 8px 16px;
+            font-size: 14px;
             font-weight: 700;
-            border-radius: var(--radius-md);
+            border-radius: var(--radius-pill);
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
             display: inline-flex;
             justify-content: center;
             align-items: center;
-            gap: 10px;
-            margin-top: 24px;
-            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+            gap: 6px;
+            box-shadow: 0 4px 12px var(--output-ring);
         }
-
-        .btn:hover {
-            background: #7c3aed;
+        .copy-header-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(139, 92, 246, 0.4);
+            box-shadow: 0 6px 16px rgba(139, 92, 246, 0.35);
+            filter: brightness(1.05);
         }
-
-        .btn:active {
-            transform: translateY(0);
+        .copy-header-btn:active { 
+            transform: translateY(0) scale(0.96); 
+            box-shadow: 0 2px 6px rgba(139, 92, 246, 0.3); 
         }
-        
-        .btn.success {
-            background: #10b981;
+        .copy-header-btn.success {
+            background: linear-gradient(135deg, #10b981, #059669);
             box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
-        }
-        
-        /* 針對 2K 解析度以上 (>= 1920px) 額外微調字體 */
-        @media (min-width: 1920px) {
-            h2 { font-size: 32px; }
-            .output-box { font-size: 20px; line-height: 2; }
-            .checkbox-card { font-size: 16px; padding: 12px 24px; }
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>📋 中山分隊受理災害登記簿登打系統</h2>
+    <div class="header-title">
+        <h2>📋 中山分隊受理災害登記輔助系統</h2>
+    </div>
 
     <div class="main-layout">
-        <!-- 左區：基本案件資訊與出勤車輛 -->
+        <!-- 左區：基本案件資訊 -->
         <div class="column">
-            <!-- 區塊一：基本案件資訊 -->
             <div class="section-group section-info">
                 <h3>1. 📍 基本案件資訊</h3>
-                <div class="flex-row" style="margin-bottom: 24px;">
-                    <div class="flex-col">
-                        <label class="field-label">案件地址</label>
-                        <input type="text" id="address" value="" placeholder="請輸入案件地址..." oninput="updateOutput()">
-                    </div>
-                    <div class="flex-col">
-                        <label class="field-label">案件類別</label>
-                        <input type="text" id="dutyType" value="" placeholder="例如：火警、救護..." oninput="updateOutput()">
-                        <!-- 案件類別快速按鈕 -->
-                        <div class="preset-group">
-                            <span class="preset-btn" onclick="quickFill('dutyType', '住宅火警')">住宅火警</span>
-                            <span class="preset-btn" onclick="quickFill('dutyType', '工廠火警')">工廠火警</span>
-                            <span class="preset-btn" onclick="quickFill('dutyType', '雜草火警')">雜草火警</span>
-                            <span class="preset-btn" onclick="quickFill('dutyType', '電線桿火警')">電線桿火警</span>
-                            <span class="preset-btn" onclick="quickFill('dutyType', '災害搶救')">災害搶救</span>
-                            <span class="preset-btn" onclick="quickFill('dutyType', '瓦斯外洩')">瓦斯外洩</span>
-                            <span class="preset-btn" onclick="quickFill('dutyType', '電梯受困')">電梯受困</span>
-                        </div>
+                
+                <div style="margin-bottom: 24px;">
+                    <label class="field-label">案件時間</label>
+                    <input type="datetime-local" id="caseTime" onchange="updateOutput()">
+                </div>
+
+                <div style="margin-bottom: 24px;">
+                    <label class="field-label">案件地址</label>
+                    <input type="text" id="address" value="" placeholder="請輸入案件地址..." oninput="updateOutput()">
+                </div>
+
+                <div style="margin-bottom: 24px;">
+                    <label class="field-label">案件類別</label>
+                    <input type="text" id="dutyType" value="" placeholder="例如：火警、救護..." oninput="updateOutput()">
+                    <div class="preset-group">
+                        <span class="preset-btn" onclick="quickFill('dutyType', '住宅火警')">住宅火警</span>
+                        <span class="preset-btn" onclick="quickFill('dutyType', '工廠火警')">工廠火警</span>
+                        <span class="preset-btn" onclick="quickFill('dutyType', '雜草火警')">雜草火警</span>
+                        <span class="preset-btn" onclick="quickFill('dutyType', '電線桿火警')">電線桿火警</span>
+                        <span class="preset-btn" onclick="quickFill('dutyType', '災害搶救')">災害搶救</span>
+                        <span class="preset-btn" onclick="quickFill('dutyType', '瓦斯外洩')">瓦斯外洩</span>
+                        <span class="preset-btn" onclick="quickFill('dutyType', '電梯受困')">電梯受困</span>
                     </div>
                 </div>
+
                 <div>
                     <label class="field-label">處理情形</label>
                     <input type="text" id="statusNote" value="" placeholder="請簡述處理情形..." oninput="updateOutput()">
-                    <!-- 處理情形快速按鈕 -->
                     <div class="preset-group">
                         <span class="preset-btn" onclick="quickFill('statusNote', '中途取消')">中途取消</span>
                         <span class="preset-btn" onclick="quickFill('statusNote', '警報器誤動作')">警報器誤動作</span>
@@ -353,10 +396,17 @@
                     </div>
                 </div>
             </div>
+        </div>
 
+        <!-- 中區：出勤車輛與出勤人員 -->
+        <div class="column">
             <!-- 區塊二：出勤車輛 -->
             <div class="section-group section-car">
-                <h3>2. 🚒 出勤車輛 <span style="font-size: 14px; color: var(--text-muted); font-weight: normal;">(可複選)</span></h3>
+                <h3>
+                    2. 🚒 出勤車輛 
+                    <span style="font-size: 14px; color: var(--text-muted); font-weight: normal;">(可複選)</span>
+                    <span id="carCountBadge" class="count-badge car">0 車</span>
+                </h3>
                 <div id="carList" class="grid-options">
                     <label class="checkbox-card car-card" onclick="toggleCard(this)"><input type="checkbox" value="11車"> 11車</label>
                     <label class="checkbox-card car-card" onclick="toggleCard(this)"><input type="checkbox" value="12車"> 12車</label>
@@ -371,13 +421,14 @@
                     <label class="checkbox-card car-card" onclick="toggleCard(this)"><input type="checkbox" value="92車"> 92車</label>
                 </div>
             </div>
-        </div>
 
-        <!-- 中區：出勤人員 -->
-        <div class="column">
             <!-- 區塊三：出勤人員 -->
             <div class="section-group section-person">
-                <h3>3. 👨‍🚒 出勤人員 <span style="font-size: 14px; color: var(--text-muted); font-weight: normal;">(可複選)</span></h3>
+                <h3>
+                    3. 👨‍🚒 出勤人員 
+                    <span style="font-size: 14px; color: var(--text-muted); font-weight: normal;">(可複選)</span>
+                    <span id="personCountBadge" class="count-badge person">0 人</span>
+                </h3>
                 
                 <div class="category-group">
                     <span class="category-badge">分隊長</span>
@@ -437,35 +488,86 @@
 
         <!-- 右區：產出文字結果 -->
         <div class="column sticky-column">
+            
             <div class="section-group section-output">
-                <h3>4. 📝 產出文字結果</h3>
-                <div id="outputBox" class="output-box"></div>
-                <button class="btn" id="copyBtn" onclick="copyText()">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-                    一鍵複製文字
-                </button>
+                <h3>
+                    4. 📝 分隊初報
+                    <button class="copy-header-btn" id="copyBtnInitial" onclick="copyText('outputBoxInitial', 'copyBtnInitial')">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                        複製
+                    </button>
+                </h3>
+                <div id="outputBoxInitial" class="output-box"></div>
             </div>
+
+            <div class="section-group section-output">
+                <h3>
+                    5. 📝 分隊結報
+                    <button class="copy-header-btn" id="copyBtnFinal" onclick="copyText('outputBoxFinal', 'copyBtnFinal')">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                        複製
+                    </button>
+                </h3>
+                <div id="outputBoxFinal" class="output-box"></div>
+            </div>
+
+            <div class="section-group section-output">
+                <h3>
+                    6. 📝 分隊處理情形
+                    <button class="copy-header-btn" id="copyBtn" onclick="copyText('outputBox', 'copyBtn')">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                        複製
+                    </button>
+                </h3>
+                <div id="outputBox" class="output-box"></div>
+            </div>
+
         </div>
     </div>
 </div>
 
 <script>
-// 點擊快速預設按鈕，將文字填入指定輸入框並更新結果
+// 初始化時設定預設時間為「現在時間」
+function initCaseTime() {
+    const now = new Date();
+    const offset = now.getTimezoneOffset() * 60000;
+    const localISOTime = (new Date(now - offset)).toISOString().slice(0, 16);
+    document.getElementById('caseTime').value = localISOTime;
+}
+
+// 將 datetime-local 轉換為民國年格式
+function formatTaiwanTime(dateString) {
+    if (!dateString) return '___';
+    const dateObj = new Date(dateString);
+    if (isNaN(dateObj.getTime())) return '___';
+    
+    const twYear = dateObj.getFullYear() - 1911;
+    const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+    const day = String(dateObj.getDate()).padStart(2, '0');
+    const hours = String(dateObj.getHours()).padStart(2, '0');
+    const minutes = String(dateObj.getMinutes()).padStart(2, '0');
+    
+    return `${twYear}年${month}月${day}日${hours}時${minutes}分`;
+}
+
+// 快速輸入按鈕微動畫與填入
 function quickFill(elementId, text) {
     const inputEl = document.getElementById(elementId);
     inputEl.value = text;
     
-    // 加上簡單的閃爍特效提示已填入
-    inputEl.style.transition = 'background 0.2s';
-    inputEl.style.background = '#ffedd5';
+    inputEl.style.transition = 'all 0.2s ease';
+    inputEl.style.transform = 'scale(1.02)';
+    inputEl.style.boxShadow = '0 0 0 4px rgba(245, 158, 11, 0.3)';
+    
     setTimeout(() => {
-        inputEl.style.background = '#ffffff';
-    }, 300);
+        inputEl.style.transform = 'scale(1)';
+        inputEl.style.boxShadow = 'var(--shadow-sm)';
+    }, 200);
 
     updateOutput();
 }
 
-// 點擊整張卡片切換選取狀態
+// 切換選取狀態
 function toggleCard(card) {
     const checkbox = card.querySelector('input[type="checkbox"]');
     checkbox.checked = !checkbox.checked;
@@ -479,27 +581,35 @@ function toggleCard(card) {
     updateOutput();
 }
 
-// 防呆處理與文字產出
+// 文字與數字更新
 function updateOutput() {
+    const rawTime = document.getElementById('caseTime').value;
+    const caseTime = formatTaiwanTime(rawTime);
     const address = document.getElementById('address').value.trim() || '___';
     const dutyType = document.getElementById('dutyType').value.trim() || '___';
     const statusNote = document.getElementById('statusNote').value.trim() || '___';
 
-    // 收集車輛
     const carCheckboxes = document.querySelectorAll('#carList input[type="checkbox"]:checked');
+    let carCount = carCheckboxes.length;
     let carsArr = Array.from(carCheckboxes).map(chk => chk.value.replace('車',''));
-    let carsStr = carsArr.length > 0 ? carsArr.join('、') + '車' : '無';
-
-    // 收集人員並依照職稱群組化
-    const personCheckboxes = document.querySelectorAll('.person-chk:checked');
-    let grouped = {};
+    let carsStr = carsArr.length > 0 ? carsArr.join('、') + '車' : '___車';
     
+    document.getElementById('carCountBadge').innerText = carCount + ' 車';
+
+    const personCheckboxes = document.querySelectorAll('.person-chk:checked');
+    let personCount = personCheckboxes.length;
+    
+    document.getElementById('personCountBadge').innerText = personCount + ' 人';
+    
+    let leaderStr = personCount > 0 
+        ? (personCheckboxes[0].getAttribute('data-title') + personCheckboxes[0].value) 
+        : '___(帶隊官)';
+
+    let grouped = {};
     personCheckboxes.forEach(chk => {
         let title = chk.getAttribute('data-title');
         let name = chk.value;
-        if (!grouped[title]) {
-            grouped[title] = [];
-        }
+        if (!grouped[title]) grouped[title] = [];
         grouped[title].push(name);
     });
 
@@ -509,28 +619,28 @@ function updateOutput() {
             groupStrs.push(title + grouped[title].join('、'));
         }
     });
-
     let personsStr = groupStrs.length > 0 ? groupStrs.join('，') + '。' : '無。';
 
-    let resultText = `中山分隊處理情形：\n一、至${address}執行${dutyType}。\n二、${statusNote}。\n三、出勤車輛:${carsStr}。\n四、出勤人員:${personsStr}`;
-
-    const outputBox = document.getElementById('outputBox');
-    outputBox.innerText = resultText;
+    let textInitial = `中山分隊報告(初報):\n一、本局於${caseTime}受理${address}${dutyType}，派遣中山${carsStr}共${carCount}車${personCount}人，由${leaderStr}帶隊前往。`;
     
-    // 給予輕微的文字閃爍動畫提示更新
-    outputBox.style.opacity = '0.5';
-    setTimeout(() => { outputBox.style.opacity = '1'; }, 100);
+    let textFinal = `中山分隊報告(結報):\n一、本局於${caseTime}受理${address}${dutyType}，派遣中山${carsStr}共${carCount}車${personCount}人，由${leaderStr}帶隊前往。\n二、${statusNote}。`;
+    
+    let textProcess = `中山分隊處理情形：\n案件時間：${caseTime}\n一、至${address}執行${dutyType}。\n二、${statusNote}。\n三、出勤車輛:${carsStr}。\n四、出勤人員:${personsStr}`;
+
+    document.getElementById('outputBoxInitial').innerText = textInitial;
+    document.getElementById('outputBoxFinal').innerText = textFinal;
+    document.getElementById('outputBox').innerText = textProcess;
 }
 
-// 複製與按鈕動畫反饋
-function copyText() {
-    const outputBox = document.getElementById('outputBox');
+// 複製功能與成功特效
+function copyText(boxId, btnId) {
+    const outputBox = document.getElementById(boxId);
     navigator.clipboard.writeText(outputBox.innerText).then(() => {
-        const btn = document.getElementById('copyBtn');
+        const btn = document.getElementById(btnId);
         const originalContent = btn.innerHTML;
         
         btn.classList.add('success');
-        btn.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg> 複製成功！`;
+        btn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg> 已複製`;
         
         setTimeout(() => {
             btn.classList.remove('success');
@@ -539,8 +649,10 @@ function copyText() {
     });
 }
 
-// 初始載入時更新一次
-window.onload = updateOutput;
+window.onload = function() {
+    initCaseTime();
+    updateOutput();
+};
 </script>
 
 </body>
